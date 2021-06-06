@@ -7,34 +7,25 @@
 
 import Foundation
 
-class NetworkingService {
+protocol Networking {
+    func request(urlString: String, complition: @escaping (Data?, Error?) -> Void)
+}
+
+class NetworkService: Networking {
     
-    let urlString = "https://newsapi.org/v2/top-headlines?country=us&apiKey=\(K.apiKey)"
-    
-    func request(complition: @escaping (NewsModel?) -> Void){
+    func request(urlString: String, complition: @escaping (Data?, Error?) -> Void) {
         guard let url = URL(string: urlString) else { return }
-        
-        var decode: NewsModel?
-        
+    
         let request = URLRequest(url: url)
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            guard error == nil else { return }
-            decode = self.decodeJSON(from: data)
-            complition(decode)
-        }
+        let task = createDataTask(from: request, completion: complition)
         task.resume()
     }
     
-    func decodeJSON(from data: Data?) -> NewsModel? {
-        let decoder = JSONDecoder()
-        
-        guard let data = data else { return nil }
-        do {
-            let objects = try decoder.decode(NewsModel.self, from: data)
-            return objects
-        } catch {
-            print(error)
-            return nil
+    private func createDataTask(from request: URLRequest, completion: @escaping (Data?, Error?) -> Void) -> URLSessionDataTask {
+        return URLSession.shared.dataTask(with: request) { data, _, error in
+            DispatchQueue.main.async {
+                completion(data, error)
+            }
         }
     }
 }

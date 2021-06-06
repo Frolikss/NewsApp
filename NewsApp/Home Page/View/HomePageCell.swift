@@ -21,11 +21,4 @@ class HomePageCell: UITableViewCell {
         titleLabel.layer.shadowOffset = CGSize(width: 4, height: 4)
         titleLabel.layer.masksToBounds = false
     }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-
 }
