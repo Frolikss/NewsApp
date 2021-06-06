@@ -12,9 +12,14 @@ class HomePageViewController: UITableViewController {
     let spinner = UIActivityIndicatorView(style: .medium)
     var dataFetcherService = DataFetcherService()
     var news: NewsModel?
+    var cache = NSCache<AnyObject, AnyObject>()
+    
+    @IBOutlet weak var segmentedControl: UISegmentedControl!
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        segmentedControl.apportionsSegmentWidthsByContent = true
         
         tableView.backgroundView = spinner
         spinner.hidesWhenStopped = true
@@ -23,6 +28,19 @@ class HomePageViewController: UITableViewController {
         dataFetcherService.fetchNews { data in
             self.news = data
             
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+                self.spinner.stopAnimating()
+            }
+        }
+    }
+    
+    @IBAction func segmentedControlPressed(_ sender: UISegmentedControl) {
+        
+        let index = sender.selectedSegmentIndex
+        dataFetcherService.fetchNewsWithCategory(from: index) { data in
+            
+            self.news = data
             DispatchQueue.main.async {
                 self.tableView.reloadData()
                 self.spinner.stopAnimating()
@@ -56,12 +74,26 @@ class HomePageViewController: UITableViewController {
         cell.authorLabel.text = newsCell?.author ?? "No author"
         cell.titleLabel.text = newsCell?.title
         
-        DispatchQueue.global(qos: .utility).async {
-            if let imageURL = URL(string: newsCell!.urlToImage ?? K.imageURL) {
-                if let dataImage = try? Data(contentsOf: imageURL) {
-                    DispatchQueue.main.async {
-                        cell.newsImage.image = UIImage(data: dataImage)
-                    }
+        if let image = cache.object(forKey: newsCell?.url as AnyObject) {
+            cell.newsImage.image = image as? UIImage
+        } else {
+            var data = Data()
+            let imageWorkItem = DispatchWorkItem {
+                guard let imageURL = URL(string: newsCell!.urlToImage ?? K.imageURL) else { return }
+                
+                do {
+                    data = try Data(contentsOf: imageURL)
+                } catch {
+                    print(error)
+                }
+            }
+            
+            DispatchQueue.global(qos: .userInitiated).async(execute: imageWorkItem)
+            
+            imageWorkItem.notify(queue: .main) {
+                cell.newsImage.image = UIImage(data: data)
+                if let image = cell.newsImage.image {
+                    self.cache.setObject(image, forKey: newsCell?.url as AnyObject)
                 }
             }
         }
