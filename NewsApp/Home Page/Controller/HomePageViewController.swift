@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftAlerts
 
 class HomePageViewController: UITableViewController {
     
@@ -13,6 +14,8 @@ class HomePageViewController: UITableViewController {
     var dataFetcherService = DataFetcherService()
     var news: NewsModel?
     var cache = NSCache<AnyObject, AnyObject>()
+    var selectedCategory = 0
+    var selectedCountry = 51
     
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     
@@ -20,32 +23,50 @@ class HomePageViewController: UITableViewController {
         super.viewWillAppear(animated)
         
         segmentedControl.apportionsSegmentWidthsByContent = true
-        
         tableView.backgroundView = spinner
         spinner.hidesWhenStopped = true
         spinner.startAnimating()
         
-        dataFetcherService.fetchNews { data in
+        dataFetcherService.fetchNews(selectedCountry: selectedCountry, selectedCategory: selectedCategory) { data in
             self.news = data
-            
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-                self.spinner.stopAnimating()
-            }
+            self.reloadTableData()
         }
     }
     
     @IBAction func segmentedControlPressed(_ sender: UISegmentedControl) {
         
-        let index = sender.selectedSegmentIndex
-        dataFetcherService.fetchNewsWithCategory(from: index) { data in
-            
+        selectedCategory = sender.selectedSegmentIndex
+        dataFetcherService.fetchNewsWithCategory(selectedCountry: selectedCountry, selectedCategory: selectedCategory) { data in
             self.news = data
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-                self.spinner.stopAnimating()
+            self.reloadTableData()
+        }
+    }
+    
+    @IBAction func selectedCountryPressed(_ sender: UIBarButtonItem) {
+        
+        let alert = UIAlertController(title: "Select Country",
+                                      message: "Select news for specific country",
+                                      preferredStyle: .actionSheet)
+        
+        let cancelAction = UIAlertAction(title: "Cancel",
+                                   style: .cancel)
+        
+        let doneAction = UIAlertAction(title: "Done",
+                                       style: .default) { _ in
+            self.spinner.startAnimating()
+            self.reloadTableData()
+        }
+        
+        alert.addAction(cancelAction)
+        alert.addAction(doneAction)
+        alert.addPickerView(values: K.countries) { _, _, index, _ in
+            self.selectedCountry = index.row
+            self.dataFetcherService.fetchNewsWithCountry(selectedCountry: self.selectedCountry,
+                                                         selectedCategory: self.selectedCategory) { data in
+                self.news = data
             }
         }
+        present(alert, animated: true)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -57,12 +78,14 @@ class HomePageViewController: UITableViewController {
         destinationVC.url = url
     }
     
-    // MARK: - Table view data source
-    
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return news != nil ? 1 : 0
+    private func reloadTableData() {
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+            self.spinner.stopAnimating()
+        }
     }
     
+    // MARK: - Table view data source
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return news?.articles.count ?? 0
     }
@@ -88,7 +111,7 @@ class HomePageViewController: UITableViewController {
                 }
             }
             
-            DispatchQueue.global(qos: .userInitiated).async(execute: imageWorkItem)
+            DispatchQueue.global(qos: .background).async(execute: imageWorkItem)
             
             imageWorkItem.notify(queue: .main) {
                 cell.newsImage.image = UIImage(data: data)

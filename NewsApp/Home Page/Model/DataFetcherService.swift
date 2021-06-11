@@ -10,19 +10,24 @@ import Foundation
 class DataFetcherService {
     
     var networkDataFetcher: DataFetcher
+    private let categories = Categories.allCases
     
     init(networkDataFetcher: DataFetcher = NetworkDataFetcher()) {
         self.networkDataFetcher = networkDataFetcher
     }
     
-    func fetchNews(completion: @escaping (NewsModel?) -> Void) {
-        let urlNewsString = "https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=\(K.apiKey)"
+    func fetchNews(selectedCountry: Int, selectedCategory: Int, completion: @escaping (NewsModel?) -> Void) {
+        let urlNewsString = "https://newsapi.org/v2/top-headlines?country=\(K.countriesIndex[selectedCountry])&category=\(categories[selectedCategory])&apiKey=\(K.apiKey)"
         networkDataFetcher.fetchGenericJSONData(urlString: urlNewsString, response: completion)
     }
     
-    func fetchNewsWithCategory(from index: Int, completion: @escaping (NewsModel?) -> Void) {
-        let categories = Categories.allCases
-        let urlNewsWithCategory = "https://newsapi.org/v2/top-headlines?country=us&category=\(categories[index])&apiKey=\(K.apiKey)"
+    func fetchNewsWithCategory(selectedCountry: Int, selectedCategory: Int, completion: @escaping (NewsModel?) -> Void) {
+        let urlNewsWithCategory = "https://newsapi.org/v2/top-headlines?country=\(K.countriesIndex[selectedCountry])&category=\(categories[selectedCategory])&apiKey=\(K.apiKey)"
+        networkDataFetcher.fetchGenericJSONData(urlString: urlNewsWithCategory, response: completion)
+    }
+    
+    func fetchNewsWithCountry(selectedCountry: Int, selectedCategory: Int, completion: @escaping (NewsModel?) -> Void) {
+        let urlNewsWithCategory = "https://newsapi.org/v2/top-headlines?country=\(K.countriesIndex[selectedCountry])&category=\(categories[selectedCategory])&apiKey=\(K.apiKey)"
         networkDataFetcher.fetchGenericJSONData(urlString: urlNewsWithCategory, response: completion)
     }
 }
