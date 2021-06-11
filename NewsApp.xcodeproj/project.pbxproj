@@ -20,6 +20,7 @@
 		32991A8C266CBFE9004CF5F6 /* DataFetcherService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32991A8B266CBFE9004CF5F6 /* DataFetcherService.swift */; };
 		32991A8F266CC6EF004CF5F6 /* Categories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32991A8E266CC6EF004CF5F6 /* Categories.swift */; };
 		32F3A92B2673890400D63D0B /* SwiftAlerts in Frameworks */ = {isa = PBXBuildFile; productRef = 32F3A92A2673890400D63D0B /* SwiftAlerts */; };
+		32F3A92D26739C3F00D63D0B /* apiKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32F3A92C26739C3F00D63D0B /* apiKey.swift */; };
 		32FD3FB3266A2A7F00847919 /* HomePage.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 32FD3FB1266A2A7F00847919 /* HomePage.storyboard */; };
 		32FD3FB5266A2CC000847919 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FD3FB4266A2CC000847919 /* NetworkService.swift */; };
 		32FD3FB9266A2D4F00847919 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FD3FB8266A2D4F00847919 /* NetworkError.swift */; };
@@ -44,6 +45,7 @@
 		32991A89266CBE6E004CF5F6 /* NetworkDataFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDataFetcher.swift; sourceTree = "<group>"; };
 		32991A8B266CBFE9004CF5F6 /* DataFetcherService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataFetcherService.swift; sourceTree = "<group>"; };
 		32991A8E266CC6EF004CF5F6 /* Categories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Categories.swift; sourceTree = "<group>"; };
+		32F3A92C26739C3F00D63D0B /* apiKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = apiKey.swift; sourceTree = "<group>"; };
 		32FD3FB2266A2A7F00847919 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = NewsApp/Application/View/Base.lproj/HomePage.storyboard; sourceTree = "<group>"; };
 		32FD3FB4266A2CC000847919 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		32FD3FB8266A2D4F00847919 /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
@@ -90,6 +92,7 @@
 				32FD3FBF266A661F00847919 /* Web page */,
 				32FD3FA4266A253000847919 /* Supporting Files */,
 				32FD3FBD266A613F00847919 /* K.swift */,
+				32F3A92C26739C3F00D63D0B /* apiKey.swift */,
 			);
 			path = NewsApp;
 			sourceTree = "<group>";
@@ -333,6 +336,7 @@
 				323A9103266A1FEE00FF357D /* HomePageCell.swift in Sources */,
 				32FD3FB5266A2CC000847919 /* NetworkService.swift in Sources */,
 				32991A8C266CBFE9004CF5F6 /* DataFetcherService.swift in Sources */,
+				32F3A92D26739C3F00D63D0B /* apiKey.swift in Sources */,
 				32FD3FC2266A666500847919 /* WebViewPage.swift in Sources */,
 				32FD3FC5266A66E600847919 /* WebPageViewController.swift in Sources */,
 				323A90EC266A162600FF357D /* SceneDelegate.swift in Sources */,
