@@ -9,7 +9,7 @@ import UIKit
 
 class SearchViewController: UIViewController {
     
-    let cellIdentifier = "SearchCell"
+    private let cellIdentifier = "SearchCell"
     var news: NewsModel?
     var dataFetcherService = DataFetcherService()
     

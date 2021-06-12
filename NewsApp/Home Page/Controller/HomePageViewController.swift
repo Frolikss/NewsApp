@@ -13,8 +13,8 @@ import SwiftAlerts
 
 class HomePageViewController: UITableViewController {
     
-    let cellIdentifier = "HomePageCell"
-    let spinner = UIActivityIndicatorView(style: .medium)
+    private let cellIdentifier = "HomePageCell"
+    private let spinner = UIActivityIndicatorView(style: .medium)
     var dataFetcherService = DataFetcherService()
     var news: NewsModel?
     var cache = NSCache<AnyObject, AnyObject>()

@@ -10,26 +10,26 @@ import WebKit
 
 class WebPageViewController: UIViewController {
     
-    private var webView: WKWebView!
+    @IBOutlet weak var webView: WKWebView!
+    @IBOutlet weak var spinnerWebView: UIActivityIndicatorView!
     
     var url: URL!
     
-    override func loadView() {
-        webView = WKWebView()
-        webView.navigationDelegate = self
-        view = webView
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
+        tabBarController?.tabBar.isHidden = true
+        webView.navigationDelegate = self
         
-        self.navigationController?.title = "Title"
-        self.tabBarController?.tabBar.isHidden = true
+        spinnerWebView.startAnimating()
+        spinnerWebView.hidesWhenStopped = true
+        
         webView.load(URLRequest(url: url))
         webView.allowsBackForwardNavigationGestures = true
     }
 }
 
-extension WebPageViewController: WKNavigationDelegate  {
-    
+extension WebPageViewController: WKNavigationDelegate {
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        spinnerWebView.stopAnimating()
+    }
 }
