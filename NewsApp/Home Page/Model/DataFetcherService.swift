@@ -27,7 +27,12 @@ class DataFetcherService {
     }
     
     func fetchNewsWithCountry(selectedCountry: Int, selectedCategory: Int, completion: @escaping (NewsModel?) -> Void) {
-        let urlNewsWithCategory = "https://newsapi.org/v2/top-headlines?country=\(K.countriesIndex[selectedCountry])&category=\(categories[selectedCategory])&apiKey=\(apiKey)"
-        networkDataFetcher.fetchGenericJSONData(urlString: urlNewsWithCategory, response: completion)
+        let urlNewsWithCountry = "https://newsapi.org/v2/top-headlines?country=\(K.countriesIndex[selectedCountry])&category=\(categories[selectedCategory])&apiKey=\(apiKey)"
+        networkDataFetcher.fetchGenericJSONData(urlString: urlNewsWithCountry, response: completion)
+    }
+    
+    func fetchNewsWithSearch(from quote: String, completion: @escaping (NewsModel?) -> Void) {
+        let urlNewsWithSearch = "https://newsapi.org/v2/top-headlines?q=\(quote)&apiKey=\(apiKey)"
+        networkDataFetcher.fetchGenericJSONData(urlString: urlNewsWithSearch, response: completion)
     }
 }

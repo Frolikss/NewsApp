@@ -5,18 +5,20 @@
 //  Created by Dima on 04.06.2021.
 //
 
+public var selectedCategory = 0
+public var selectedCountry = K.countriesIndex.firstIndex(of: "us")!
+
 import UIKit
 import SwiftAlerts
 
 class HomePageViewController: UITableViewController {
     
+    let cellIdentifier = "HomePageCell"
     let spinner = UIActivityIndicatorView(style: .medium)
     var dataFetcherService = DataFetcherService()
     var news: NewsModel?
     var cache = NSCache<AnyObject, AnyObject>()
-    var selectedCategory = 0
-    var selectedCountry = 51
-    
+
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     
     override func viewWillAppear(_ animated: Bool) {
@@ -27,17 +29,21 @@ class HomePageViewController: UITableViewController {
         spinner.hidesWhenStopped = true
         spinner.startAnimating()
         
-        dataFetcherService.fetchNews(selectedCountry: selectedCountry, selectedCategory: selectedCategory) { data in
-            self.news = data
+        dataFetcherService.fetchNews(selectedCountry: selectedCountry,
+                                     selectedCategory: selectedCategory) { news in
+            self.news = news
             self.reloadTableData()
         }
     }
     
+    //MARK: - IBActions
     @IBAction func segmentedControlPressed(_ sender: UISegmentedControl) {
         
         selectedCategory = sender.selectedSegmentIndex
-        dataFetcherService.fetchNewsWithCategory(selectedCountry: selectedCountry, selectedCategory: selectedCategory) { data in
-            self.news = data
+        dataFetcherService.fetchNewsWithCategory(selectedCountry: selectedCountry,
+                                                 selectedCategory: selectedCategory) { news in
+            self.news = news
+            self.spinner.startAnimating()
             self.reloadTableData()
         }
     }
@@ -60,15 +66,16 @@ class HomePageViewController: UITableViewController {
         alert.addAction(cancelAction)
         alert.addAction(doneAction)
         alert.addPickerView(values: K.countries) { _, _, index, _ in
-            self.selectedCountry = index.row
-            self.dataFetcherService.fetchNewsWithCountry(selectedCountry: self.selectedCountry,
-                                                         selectedCategory: self.selectedCategory) { data in
-                self.news = data
+            selectedCountry = index.row
+            self.dataFetcherService.fetchNewsWithCountry(selectedCountry: selectedCountry,
+                                                         selectedCategory: selectedCategory) { news in
+                self.news = news
             }
         }
         present(alert, animated: true)
     }
     
+    //MARK: - Prepare for segue func
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let indexPath = tableView.indexPathForSelectedRow else { return }
         guard let urlString = news?.articles[indexPath.row].url,
@@ -78,6 +85,7 @@ class HomePageViewController: UITableViewController {
         destinationVC.url = url
     }
     
+    //MARK: - Reload Table Data func
     private func reloadTableData() {
         DispatchQueue.main.async {
             self.tableView.reloadData()
@@ -91,7 +99,7 @@ class HomePageViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "HomePageCell", for: indexPath) as! HomePageCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! HomePageCell
         
         let newsCell = news?.articles[indexPath.row]
         cell.authorLabel.text = newsCell?.author ?? "No author"
@@ -107,7 +115,7 @@ class HomePageViewController: UITableViewController {
                 do {
                     data = try Data(contentsOf: imageURL)
                 } catch {
-                    print(error)
+                    data = try! Data(contentsOf: URL(string: K.imageURL)!)
                 }
             }
             

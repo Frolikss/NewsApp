@@ -17,4 +17,5 @@ struct Article: Decodable {
     let title: String
     let url: String
     let urlToImage: String?
+    let description: String?
 }
