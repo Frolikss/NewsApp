@@ -98,8 +98,6 @@
 				32FD3FBF266A661F00847919 /* Web page */,
 				324A82D9267498C2009EE16D /* Search Page */,
 				32FD3FA4266A253000847919 /* Supporting Files */,
-				32FD3FBD266A613F00847919 /* K.swift */,
-				32F3A92C26739C3F00D63D0B /* apiKey.swift */,
 			);
 			path = NewsApp;
 			sourceTree = "<group>";
@@ -160,6 +158,8 @@
 		32FD3FA4266A253000847919 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				32FD3FBD266A613F00847919 /* K.swift */,
+				32F3A92C26739C3F00D63D0B /* apiKey.swift */,
 				323A90F5266A162800FF357D /* Assets.xcassets */,
 				323A90FA266A162800FF357D /* Info.plist */,
 			);

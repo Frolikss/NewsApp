@@ -18,11 +18,13 @@ class HomePageViewController: UITableViewController {
     var dataFetcherService = DataFetcherService()
     var news: NewsModel?
     var cache = NSCache<AnyObject, AnyObject>()
-
+    
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        tabBarController?.tabBar.isHidden = false
         
         segmentedControl.apportionsSegmentWidthsByContent = true
         tableView.backgroundView = spinner
@@ -38,13 +40,16 @@ class HomePageViewController: UITableViewController {
     
     //MARK: - IBActions
     @IBAction func segmentedControlPressed(_ sender: UISegmentedControl) {
-        
+    
         selectedCategory = sender.selectedSegmentIndex
         dataFetcherService.fetchNewsWithCategory(selectedCountry: selectedCountry,
                                                  selectedCategory: selectedCategory) { news in
             self.news = news
-            self.spinner.startAnimating()
-            self.reloadTableData()
+            UIView.transition(with: self.tableView,
+                              duration: 0.75,
+                              options: .transitionCrossDissolve,
+                              animations: { self.tableView.reloadData() })
+            
         }
     }
     
@@ -55,7 +60,7 @@ class HomePageViewController: UITableViewController {
                                       preferredStyle: .actionSheet)
         
         let cancelAction = UIAlertAction(title: "Cancel",
-                                   style: .cancel)
+                                         style: .cancel)
         
         let doneAction = UIAlertAction(title: "Done",
                                        style: .default) { _ in
@@ -75,6 +80,18 @@ class HomePageViewController: UITableViewController {
         present(alert, animated: true)
     }
     
+    
+    @IBAction func refreshPage(_ sender: UIRefreshControl) {
+        dataFetcherService.fetchNews(selectedCountry: selectedCountry,
+                                     selectedCategory: selectedCategory) { news in
+            if self.news?.articles.first?.title != news?.articles.first?.title {
+                self.news = news
+                self.tableView.reloadData()
+            }
+            sender.endRefreshing()
+        }
+        
+    }
     //MARK: - Prepare for segue func
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let indexPath = tableView.indexPathForSelectedRow else { return }
@@ -106,7 +123,10 @@ class HomePageViewController: UITableViewController {
         cell.titleLabel.text = newsCell?.title
         
         if let image = cache.object(forKey: newsCell?.url as AnyObject) {
-            cell.newsImage.image = image as? UIImage
+            UIView.transition(with: cell,
+                              duration: 0.75,
+                              options: .transitionCrossDissolve,
+                              animations: { cell.newsImage.image = image as? UIImage })
         } else {
             var data = Data()
             let imageWorkItem = DispatchWorkItem {
@@ -122,7 +142,10 @@ class HomePageViewController: UITableViewController {
             DispatchQueue.global(qos: .background).async(execute: imageWorkItem)
             
             imageWorkItem.notify(queue: .main) {
-                cell.newsImage.image = UIImage(data: data)
+                UIView.transition(with: cell,
+                                  duration: 0.75,
+                                  options: .transitionCrossDissolve,
+                                  animations: { cell.newsImage.image = UIImage(data: data) })
                 if let image = cell.newsImage.image {
                     self.cache.setObject(image, forKey: newsCell?.url as AnyObject)
                 }

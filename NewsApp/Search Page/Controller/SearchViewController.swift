@@ -18,7 +18,9 @@ class SearchViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.title = "Search"
+        tabBarController?.tabBar.isHidden = false
   
         textField.becomeFirstResponder()
         textField.layer.borderWidth = 1.0
@@ -26,6 +28,7 @@ class SearchViewController: UIViewController {
         textField.layer.masksToBounds = true
         textField.layer.borderColor = UIColor.red.cgColor
         
+        self.tableView.tableFooterView = UIView()
         self.tableView.separatorColor = .gray
         self.tableView.isHidden = true
     }
@@ -76,7 +79,7 @@ extension SearchViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "Total resuts: \(news?.totalResults ?? 0)"
+        return "Total results: \(news?.totalResults ?? 0)"
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
