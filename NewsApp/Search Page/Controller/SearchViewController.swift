@@ -20,7 +20,7 @@ class SearchViewController: UIViewController {
         super.viewDidLoad()
         
         self.title = "Search"
-        tabBarController?.tabBar.isHidden = false
+       
   
         textField.becomeFirstResponder()
         textField.layer.borderWidth = 1.0

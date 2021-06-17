@@ -26,6 +26,11 @@ class WebPageViewController: UIViewController {
         webView.load(URLRequest(url: url))
         webView.allowsBackForwardNavigationGestures = true
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        tabBarController?.tabBar.isHidden = false
+    }
 }
 
 extension WebPageViewController: WKNavigationDelegate {

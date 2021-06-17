@@ -118,6 +118,8 @@ class HomePageViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! HomePageCell
         
+        cell.delegate = self
+        cell.indexPath = indexPath
         let newsCell = news?.articles[indexPath.row]
         cell.authorLabel.text = newsCell?.author ?? "No author"
         cell.titleLabel.text = newsCell?.title
@@ -152,5 +154,11 @@ class HomePageViewController: UITableViewController {
             }
         }
         return cell
+    }
+}
+
+extension HomePageViewController: HomePageCellDelegate {
+    func getIndexPath(indexPath: IndexPath) {
+        print(indexPath.row)
     }
 }
