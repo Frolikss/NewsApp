@@ -5,24 +5,28 @@
 //  Created by Dima on 04.06.2021.
 //
 
-public var selectedCategory = 0
-public var selectedCountry = K.countriesIndex.firstIndex(of: "us")!
+fileprivate var selectedCategory = 0
+fileprivate var selectedCountry = K.countriesIndex.firstIndex(of: "us")!
 
 import UIKit
+import CoreData
 import SwiftAlerts
 
 class HomePageViewController: UITableViewController {
     
     private let cellIdentifier = "HomePageCell"
     private let spinner = UIActivityIndicatorView(style: .medium)
-    var dataFetcherService = DataFetcherService()
-    var news: NewsModel?
-    var cache = NSCache<AnyObject, AnyObject>()
+    private var dataFetcherService = DataFetcherService()
+    private var news: NewsModel?
+    private var cache = NSCache<AnyObject, AnyObject>()
+    private var context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         
         tabBarController?.tabBar.isHidden = false
         
@@ -40,7 +44,7 @@ class HomePageViewController: UITableViewController {
     
     //MARK: - IBActions
     @IBAction func segmentedControlPressed(_ sender: UISegmentedControl) {
-    
+        
         selectedCategory = sender.selectedSegmentIndex
         dataFetcherService.fetchNewsWithCategory(selectedCountry: selectedCountry,
                                                  selectedCategory: selectedCategory) { news in
@@ -70,8 +74,9 @@ class HomePageViewController: UITableViewController {
         
         alert.addAction(cancelAction)
         alert.addAction(doneAction)
-        alert.addPickerView(values: K.countries) { _, _, index, _ in
-            selectedCountry = index.row
+        alert.addPickerView(values: K.countries) { _, _, indexPath, _ in
+            selectedCountry = indexPath.row
+            
             self.dataFetcherService.fetchNewsWithCountry(selectedCountry: selectedCountry,
                                                          selectedCategory: selectedCategory) { news in
                 self.news = news
@@ -80,22 +85,22 @@ class HomePageViewController: UITableViewController {
         present(alert, animated: true)
     }
     
-    
     @IBAction func refreshPage(_ sender: UIRefreshControl) {
         dataFetcherService.fetchNews(selectedCountry: selectedCountry,
                                      selectedCategory: selectedCategory) { news in
+            
             if self.news?.articles.first?.title != news?.articles.first?.title {
                 self.news = news
                 self.tableView.reloadData()
             }
             sender.endRefreshing()
         }
-        
     }
+    
     //MARK: - Prepare for segue func
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let indexPath = tableView.indexPathForSelectedRow else { return }
-        guard let urlString = news?.articles[indexPath.row].url,
+        guard let indexPath = tableView.indexPathForSelectedRow,
+              let urlString = news?.articles[indexPath.row].url,
               let url = URL(string: urlString) else { return }
         
         let destinationVC = segue.destination as! WebPageViewController
@@ -157,8 +162,29 @@ class HomePageViewController: UITableViewController {
     }
 }
 
+//MARK: - HomePageCellDelegate
 extension HomePageViewController: HomePageCellDelegate {
-    func getIndexPath(indexPath: IndexPath) {
-        print(indexPath.row)
+    
+    func getIndexPathForShareButton(_ indexPath: IndexPath) {
+        guard let selectedNews = news?.articles[indexPath.row] else { return }
+        
+        let shareAction = UIActivityViewController(activityItems: [selectedNews.url], applicationActivities: nil)
+        present(shareAction, animated: true)
+    }
+    
+    func getIndexPathForBookmarkButton(_ indexPath: IndexPath) {
+        guard let selectedNews = news?.articles[indexPath.row] else { return }
+        
+        let persitentNews = PersistentNews(context: context)
+        persitentNews.title = selectedNews.title
+        persitentNews.url = selectedNews.url
+        persitentNews.urlToImage = selectedNews.urlToImage
+        persitentNews.date = Date()
+        
+        do {
+            try context.save()
+        } catch {
+            print(error.localizedDescription)
+        }
     }
 }

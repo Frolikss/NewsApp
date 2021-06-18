@@ -8,7 +8,8 @@
 import UIKit
 
 protocol HomePageCellDelegate: AnyObject {
-    func getIndexPath(indexPath: IndexPath)
+    func getIndexPathForBookmarkButton(_ indexPath: IndexPath)
+    func getIndexPathForShareButton(_ indexPath: IndexPath)
 }
 
 class HomePageCell: UITableViewCell {
@@ -19,6 +20,7 @@ class HomePageCell: UITableViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var authorLabel: UILabel!
     @IBOutlet weak var newsImage: UIImageView!
+    @IBOutlet weak var favoriteButton: UIButton!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -28,8 +30,14 @@ class HomePageCell: UITableViewCell {
         titleLabel.layer.shadowOffset = CGSize(width: 4, height: 4)
         titleLabel.layer.masksToBounds = false
     }
+    
     @IBAction func bookmarkButtonPressed(_ sender: UIButton) {
         guard let indexPath = indexPath else { return }
-        delegate?.getIndexPath(indexPath: indexPath)
+        delegate?.getIndexPathForBookmarkButton(indexPath)
+    }
+    
+    @IBAction func shareButtonPressed(_ sender: UIButton) {
+        guard let indexPath = indexPath else { return }
+        delegate?.getIndexPathForShareButton(indexPath)
     }
 }
