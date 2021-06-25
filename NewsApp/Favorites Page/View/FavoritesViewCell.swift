@@ -7,10 +7,6 @@
 
 import UIKit
 
-protocol FavoritesViewCellDelegate: AnyObject {
-    func getIndexPath(_ indexPath: IndexPath)
-}
-
 class FavoritesViewCell: UITableViewCell {
     
     weak var delegate: FavoritesViewCellDelegate?
@@ -22,6 +18,11 @@ class FavoritesViewCell: UITableViewCell {
     
     @IBAction func binButtonPressed(_ sender: Any) {
         guard let indexPath = indexPath else { return }
-        delegate?.getIndexPath(indexPath)
+        delegate?.getIndexPathForDeleteAction(indexPath)
+    }
+    
+    @IBAction func shareButtonPressed(_ sender: UIButton) {
+        guard let indexPath = indexPath else { return }
+        delegate?.getIndexPathForShareAction(indexPath, sender)
     }
 }

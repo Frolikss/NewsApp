@@ -7,20 +7,14 @@
 
 import UIKit
 
-protocol HomePageCellDelegate: AnyObject {
-    func getIndexPathForBookmarkButton(_ indexPath: IndexPath)
-    func getIndexPathForShareButton(_ indexPath: IndexPath)
-}
-
 class HomePageCell: UITableViewCell {
     
     weak var delegate: HomePageCellDelegate?
     var indexPath: IndexPath?
-
+    
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var authorLabel: UILabel!
     @IBOutlet weak var newsImage: UIImageView!
-    @IBOutlet weak var favoriteButton: UIButton!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -31,13 +25,8 @@ class HomePageCell: UITableViewCell {
         titleLabel.layer.masksToBounds = false
     }
     
-    @IBAction func bookmarkButtonPressed(_ sender: UIButton) {
-        guard let indexPath = indexPath else { return }
-        delegate?.getIndexPathForBookmarkButton(indexPath)
-    }
-    
     @IBAction func shareButtonPressed(_ sender: UIButton) {
         guard let indexPath = indexPath else { return }
-        delegate?.getIndexPathForShareButton(indexPath)
+        delegate?.getIndexPathForShareButton(indexPath, sender)
     }
 }

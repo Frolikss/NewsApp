@@ -22,7 +22,11 @@ class NetworkService: Networking {
     }
     
     private func createDataTask(from request: URLRequest, completion: @escaping (Data?, Error?) -> Void) -> URLSessionDataTask {
-        return URLSession.shared.dataTask(with: request) { data, _, error in
+        return URLSession.shared.dataTask(with: request) { data, response, error in
+            
+            guard let response = response as? HTTPURLResponse, (200...299).contains(response.statusCode) else {
+                completion(nil, NetworkError.failInternetError)
+                return }
             DispatchQueue.main.async {
                 completion(data, error)
             }

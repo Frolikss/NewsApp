@@ -19,6 +19,7 @@ class FavoritesViewController: UITableViewController {
         return dt
     }()
     
+    //MARK: - View Controller Life Cycle
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         fetchNews()
@@ -37,7 +38,6 @@ class FavoritesViewController: UITableViewController {
     
     //MARK: - Fetch News from CoreData func
     private func fetchNews() {
-        
         do {
             favoriteNews = try context.fetch(PersistentNews.fetchRequest())
             self.tableView.reloadData()
@@ -48,7 +48,19 @@ class FavoritesViewController: UITableViewController {
     
     // MARK: - Table view data source
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return favoriteNews?.count ?? 0
+        if favoriteNews?.count == 0 {
+            let emptyLabel = UILabel(frame: CGRect(x: 0,
+                                                   y: 0,
+                                                   width: self.view.bounds.size.width,
+                                                   height: self.view.bounds.size.height))
+            emptyLabel.text = "Swipe right to save story"
+            emptyLabel.textAlignment = .center
+            self.tableView.backgroundView = emptyLabel
+            self.tableView.separatorStyle = .none
+            return 0
+        } else {
+            return favoriteNews?.count ?? 0
+        }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -60,8 +72,9 @@ class FavoritesViewController: UITableViewController {
             guard let favoriteNews = favoriteNews?[indexPath.row],
                   let imageURL = URL(string: favoriteNews.urlToImage!) else { return UITableViewCell() }
             
-            cell.titleLabel.text = favoriteNews.title
             let date = dateFormatter.string(from: favoriteNews.date!)
+            
+            cell.titleLabel.text = favoriteNews.title
             cell.savedOnLabel.text = "Saved: \(date)"
             
             var data = Data()
@@ -84,7 +97,8 @@ class FavoritesViewController: UITableViewController {
 
 //MARK: - FavoritesViewCellDelegate
 extension FavoritesViewController: FavoritesViewCellDelegate {
-    func getIndexPath(_ indexPath: IndexPath) {
+    
+    func getIndexPathForDeleteAction(_ indexPath: IndexPath) {
         guard let deleteNews = favoriteNews?[indexPath.row] else { return }
         
         favoriteNews?.remove(at: indexPath.row)
@@ -96,5 +110,13 @@ extension FavoritesViewController: FavoritesViewCellDelegate {
         } catch {
             print(error.localizedDescription)
         }
+    }
+    
+    func getIndexPathForShareAction(_ indexPath: IndexPath, _ button: UIButton) {
+        guard let selectedNews = favoriteNews?[indexPath.row].url else { return }
+        
+        let shareAction = UIActivityViewController(activityItems: [selectedNews], applicationActivities: nil)
+        shareAction.popoverPresentationController?.sourceView = button
+        present(shareAction, animated: true)
     }
 }

@@ -15,8 +15,10 @@ class WebPageViewController: UIViewController {
     
     var url: URL!
     
+    //MARK: - View Controller Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         tabBarController?.tabBar.isHidden = true
         webView.navigationDelegate = self
         
@@ -33,6 +35,7 @@ class WebPageViewController: UIViewController {
     }
 }
 
+//MARK: - WKNavigationDelegate
 extension WebPageViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         spinnerWebView.stopAnimating()

@@ -9,7 +9,7 @@ import Foundation
 
 struct NewsModel: Decodable {
     let totalResults: Int
-    let articles: [Article]
+    var articles: [Article]
 }
 
 struct Article: Decodable {
@@ -19,4 +19,5 @@ struct Article: Decodable {
     let urlToImage: String?
     let description: String?
 }
+
 
