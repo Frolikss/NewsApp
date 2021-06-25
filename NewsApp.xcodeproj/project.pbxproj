@@ -21,6 +21,8 @@
 		324A82E22674A758009EE16D /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 324A82E12674A758009EE16D /* SearchTableViewCell.swift */; };
 		3289D4602685CDCB00ED896C /* HomePageCellDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3289D45F2685CDCB00ED896C /* HomePageCellDelegate.swift */; };
 		3289D4632685D1FC00ED896C /* FavoritesViewCellDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3289D4622685D1FC00ED896C /* FavoritesViewCellDelegate.swift */; };
+		3289D4682685D5DD00ED896C /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3289D4672685D5DD00ED896C /* Networking.swift */; };
+		3289D46A2685D5F100ED896C /* DataFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3289D4692685D5F100ED896C /* DataFetcher.swift */; };
 		32991A8C266CBFE9004CF5F6 /* DataFetcherService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32991A8B266CBFE9004CF5F6 /* DataFetcherService.swift */; };
 		32991A8F266CC6EF004CF5F6 /* Categories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32991A8E266CC6EF004CF5F6 /* Categories.swift */; };
 		32B9FDA4267CC892007FD371 /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32B9FDA3267CC892007FD371 /* FavoritesViewController.swift */; };
@@ -51,6 +53,8 @@
 		324A82E12674A758009EE16D /* SearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewCell.swift; sourceTree = "<group>"; };
 		3289D45F2685CDCB00ED896C /* HomePageCellDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageCellDelegate.swift; sourceTree = "<group>"; };
 		3289D4622685D1FC00ED896C /* FavoritesViewCellDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewCellDelegate.swift; sourceTree = "<group>"; };
+		3289D4672685D5DD00ED896C /* Networking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
+		3289D4692685D5F100ED896C /* DataFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataFetcher.swift; sourceTree = "<group>"; };
 		32991A8B266CBFE9004CF5F6 /* DataFetcherService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataFetcherService.swift; sourceTree = "<group>"; };
 		32991A8E266CC6EF004CF5F6 /* Categories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Categories.swift; sourceTree = "<group>"; };
 		32B9FDA3267CC892007FD371 /* FavoritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewController.swift; sourceTree = "<group>"; };
@@ -150,6 +154,15 @@
 			isa = PBXGroup;
 			children = (
 				3289D4622685D1FC00ED896C /* FavoritesViewCellDelegate.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		3289D4662685D5C400ED896C /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				3289D4672685D5DD00ED896C /* Networking.swift */,
+				3289D4692685D5F100ED896C /* DataFetcher.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -276,6 +289,7 @@
 		32FD3FB6266A2CC400847919 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				3289D4662685D5C400ED896C /* Protocols */,
 				32FD3FBA266A2E6400847919 /* Model */,
 				32FD3FB4266A2CC000847919 /* NetworkService.swift */,
 				32F041F7267B9A8E003BBA9B /* NetworkDataFetcher.swift */,
@@ -393,11 +407,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				324A82DB267498DF009EE16D /* SearchViewController.swift in Sources */,
+				3289D46A2685D5F100ED896C /* DataFetcher.swift in Sources */,
 				3289D4602685CDCB00ED896C /* HomePageCellDelegate.swift in Sources */,
 				32991A8F266CC6EF004CF5F6 /* Categories.swift in Sources */,
 				32FD3FBE266A613F00847919 /* K.swift in Sources */,
 				32FD3FBC266A2E7600847919 /* NewsModel.swift in Sources */,
 				323A9101266A180400FF357D /* HomePageViewController.swift in Sources */,
+				3289D4682685D5DD00ED896C /* Networking.swift in Sources */,
 				32FD3FB9266A2D4F00847919 /* NetworkError.swift in Sources */,
 				323A90EA266A162600FF357D /* AppDelegate.swift in Sources */,
 				323A90F4266A162600FF357D /* NewsApp.xcdatamodeld in Sources */,
