@@ -5,9 +5,6 @@
 //  Created by Dima on 04.06.2021.
 //
 
-fileprivate var selectedCategory = 0
-fileprivate var selectedCountry = K.countriesIndex.firstIndex(of: "us")!
-
 import UIKit
 import CoreData
 import SwiftAlerts
@@ -20,6 +17,8 @@ class HomePageViewController: UITableViewController {
     private var news: NewsModel?
     private var cache = NSCache<AnyObject, AnyObject>()
     private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    fileprivate var selectedCategory = 0
+    fileprivate var selectedCountry = K.countriesIndex.firstIndex(of: "us")!
     
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     
@@ -77,9 +76,9 @@ class HomePageViewController: UITableViewController {
         alert.addAction(doneAction)
         alert.addPickerView(values: K.countries) { _, _, indexPath, _ in
             
-            selectedCountry = indexPath.row
-            self.dataFetcherService.fetchNewsWithCountry(selectedCountry: selectedCountry,
-                                                         selectedCategory: selectedCategory) { news in
+            self.selectedCountry = indexPath.row
+            self.dataFetcherService.fetchNewsWithCountry(selectedCountry: self.selectedCountry,
+                                                         selectedCategory: self.selectedCategory) { news in
                 self.news = news
             }
         }
@@ -139,9 +138,9 @@ class HomePageViewController: UITableViewController {
             let persitentItem = PersistentNews(context: self.context)
             persitentItem.title = selectedNews.title
             persitentItem.url = selectedNews.url
-            persitentItem.urlToImage = selectedNews.urlToImage
+            persitentItem.urlToImage = selectedNews.urlToImage == nil ? K.imageURL : selectedNews.urlToImage
             persitentItem.date = Date()
-            
+    
             do {
                 try self.context.save()
             } catch {
